@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/public/Asset/fevicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/public/Asset/fevicon/favicon.svg" />
+    <link rel="shortcut icon" href="/public/Asset/fevicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/public/Asset/fevicon/apple-touch-icon.png" />
+    <link rel="manifest" href="/public/Asset/fevicon/site.webmanifest" />
+    <title>BookMyHotel - Room Booking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="src/output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'hotel-gold': '#e6c96e',
+                        'hotel-black': '#222222',
+                        'hotel-beige': '#f3e9d2',
+                        'hotel-sidebar': '#ffcc66',
+                        'hotel-primary': '#1a365d',
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .price-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #e6c96e;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        .price-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #e6c96e;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen font-inter">
+    <!-- Navigation Bar -->
+    <nav class="bg-hotel-black p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-hotel-gold text-xl font-bold italic">BookMyHotel</a>
+            <div class="hidden md:flex space-x-4">
+                <a href="/Index.html" class="text-white hover:text-hotel-gold transition-colors">Home</a>
+                <a href="/src/Pages/Contact/feedback.html" class="text-white hover:text-hotel-gold transition-colors">Feedback</a>
+                <a href="/src/Pages/Contact/Contact.html" class="text-white hover:text-hotel-gold transition-colors">Contact Us</a>
+                <a href="/src/Pages/Customer/userportal.html" class="text-hotel-gold ml-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                </a>
+            </div>
+            <button class="md:hidden text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-6" id="bookingApp">
+        <!-- Room Search Page -->
+        <div id="roomSearchPage" class="page active">
+            <!-- Search Header -->
+            <div class="bg-hotel-black text-white p-4 rounded-t-lg flex flex-col md:flex-row justify-between items-center">
+                <h2 class="text-xl font-semibold mb-2 md:mb-0">Find Your Perfect Room</h2>
+                <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <div>
+                            <span class="text-xs block">Check In</span>
+                            <input type="date" id="checkInDate" class=" text-black p-1 text-sm border border-gray-700 rounded">
+                        </div>
+                        <div>
+                            <span class="text-xs block">Check Out</span>
+                            <input type="date" id="checkOutDate" class=" text-black p-1 text-sm border border-gray-700 rounded">
+                        </div>
+                    </div>
+                    <button id="applyDatesBtn" class="bg-hotel-gold text-hotel-black px-3 py-1 rounded text-sm font-medium">
+                        Apply
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row bg-white shadow-lg">
+                <!-- Sidebar Filter -->
+                <div class="w-full md:w-1/4 bg-hotel-sidebar p-4">
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-semibold text-lg">Filters</h3>
+                        </div>
+                        
+                        <!-- Price Range Filter -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium mb-2">Price Range (₹)</label>
+                            <input type="range" id="priceRange" min="1000" max="10000" step="500" value="5000" class="price-slider w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer">
+                            <div class="flex justify-between text-sm mt-1">
+                                <span id="minPrice">₹1000</span>
+                                <span id="maxPrice">₹10000</span>
+                            </div>
+                        </div>
+
+                        <!-- Room Type Filter -->
+                        <div class="mb-6">
+                            <h3 class="font-semibold text-sm mb-2">ROOM TYPE</h3>
+                            <div class="space-y-2" id="roomTypeFilters">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="type-standard" class="mr-2 room-type" value="standard">
+                                    <label for="type-standard" class="text-sm cursor-pointer">Standard Room</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="type-deluxe" class="mr-2 room-type" value="deluxe">
+                                    <label for="type-deluxe" class="text-sm cursor-pointer">Deluxe Room</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="type-executive" class="mr-2 room-type" value="executive">
+                                    <label for="type-executive" class="text-sm cursor-pointer">Executive Suite</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="type-presidential" class="mr-2 room-type" value="presidential">
+                                    <label for="type-presidential" class="text-sm cursor-pointer">Presidential Suite</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Amenities Filter -->
+                        <div class="mb-6">
+                            <h3 class="font-semibold text-sm mb-2">AMENITIES</h3>
+                            <div class="space-y-2" id="amenitiesFilters">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="amenity-wifi" class="mr-2 amenity" value="wifi">
+                                    <label for="amenity-wifi" class="text-sm cursor-pointer">Free WiFi</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="amenity-ac" class="mr-2 amenity" value="ac">
+                                    <label for="amenity-ac" class="text-sm cursor-pointer">Air Conditioning</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="amenity-pool" class="mr-2 amenity" value="pool">
+                                    <label for="amenity-pool" class="text-sm cursor-pointer">Swimming Pool</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="amenity-restaurant" class="mr-2 amenity" value="restaurant">
+                                    <label for="amenity-restaurant" class="text-sm cursor-pointer">Restaurant</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="amenity-spa" class="mr-2 amenity" value="spa">
+                                    <label for="amenity-spa" class="text-sm cursor-pointer">Spa</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button id="resetFiltersBtn" class="w-full bg-hotel-black text-white py-2 rounded text-sm font-medium">
+                            Reset Filters
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Content - Rooms -->
+                <div class="w-full md:w-3/4 p-4">
+                    <!-- Search Bar -->
+                    <div class="mb-6">
+                        <div class="relative">
+                            <input type="text" id="roomSearch" placeholder="Search rooms..." class="w-full rounded-full bg-gray-100 text-gray-800 pl-4 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-hotel-gold">
+                            <button id="searchBtn" class="absolute right-3 top-1/2 transform -translate-y-1/2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Room Count -->
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600" id="roomCount">Showing 5 of 10 rooms</p>
+                    </div>
+
+                    <!-- Rooms Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="roomsGrid">
+                        <!-- Room cards will be inserted here by JavaScript -->
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="mt-8 flex justify-center">
+                        <nav class="inline-flex rounded-md shadow" id="pagination">
+                            <!-- Pagination buttons will be inserted here by JavaScript -->
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Form Page -->
+        <div id="bookingFormPage" class="page">
+            <!-- Booking Header -->
+            <div class="bg-hotel-black text-white p-4 rounded-t-lg flex justify-between items-center">
+                <h2 class="text-xl font-semibold">Complete Your Booking</h2>
+                <button id="backToRoomsBtn" class="bg-gray-700 text-white px-4 py-2 rounded text-sm font-medium hover:bg-gray-600 transition">
+                    Back to Rooms
+                </button>
+            </div>
+
+            <div class="bg-white shadow-lg">
+                <div class="flex flex-col lg:flex-row">
+                    <!-- Left Side - Booking Form -->
+                    <div class="w-full lg:w-1/2 p-6">
+                        <h3 class="font-bold text-xl mb-6" id="bookingRoomTitle">Booking: Deluxe Room</h3>
+                        
+                        <!-- Guest Information -->
+                        <div class="mb-8">
+                            <h4 class="font-semibold text-lg mb-4 border-b pb-2">Guest Information</h4>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Full Name</label>
+                                    <input type="text" id="guestName" class="w-full rounded border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-hotel-gold focus:border-transparent">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Email Address</label>
+                                    <input type="email" id="guestEmail" class="w-full rounded border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-hotel-gold focus:border-transparent">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Phone Number</label>
+                                    <input type="tel" id="guestPhone" class="w-full rounded border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-hotel-gold focus:border-transparent">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Special Requests</label>
+                                    <textarea rows="3" id="specialRequests" class="w-full rounded border border-gray-300 resize-none px-4 py-2 focus:ring-2 focus:ring-hotel-gold focus:border-transparent"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Information -->
+                        <div class="mb-8">
+                            <h4 class="font-semibold text-lg mb-4 border-b pb-2">Payment Information</h4>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Card Number</label>
+                                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" class="w-full rounded border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-hotel-gold focus:border-transparent">
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">Expiry Date</label>
+                                        <input type="text" id="cardExpiry" placeholder="MM/YY" class="w-full rounded border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-hotel-gold focus:border-transparent">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-1">CVV</label>
+                                        <input type="text" id="cardCvv" placeholder="123" class="w-full rounded border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-hotel-gold focus:border-transparent">
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium mb-1">Name on Card</label>
+                                    <input type="text" id="cardName" class="w-full rounded border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-hotel-gold focus:border-transparent">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Terms and Conditions -->
+                        <div class="mb-6">
+                            <div class="flex items-start">
+                                <input type="checkbox" id="termsAgreement" class="mt-1 mr-2">
+                                <label for="termsAgreement" class="text-sm">I agree to the <a href="#" class="text-hotel-gold hover:underline">Terms and Conditions</a> and <a href="#" class="text-hotel-gold hover:underline">Privacy Policy</a></label>
+                            </div>
+                        </div>
+                        
+                        <button id="confirmBookingBtn" class="w-full bg-hotel-gold text-hotel-black py-3 rounded-lg font-bold hover:bg-opacity-90 transition">
+                            Confirm Booking
+                        </button>
+                    </div>
+                    
+                    <!-- Right Side - Booking Summary -->
+                    <div class="w-full lg:w-1/2 bg-gray-50 p-6">
+                        <h3 class="font-bold text-xl mb-6">Booking Summary</h3>
+                        
+                        <div class="bg-white rounded-lg shadow-sm p-4 mb-6" id="bookingSummary">
+                            <!-- Booking summary will be updated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Confirmation Page -->
+        <div id="confirmationPage" class="page">
+            <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="bg-hotel-gold p-6 text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-green-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <h2 class="text-2xl font-bold mb-2">Booking Confirmed!</h2>
+                    <p class="text-lg">Thank you for your reservation</p>
+                </div>
+                
+                <div class="p-6">
+                    <div class="text-center mb-6">
+                        <p class="text-gray-600 mb-4">Your booking reference number is:</p>
+                        <p class="text-xl font-bold text-hotel-black" id="bookingReference">#123456</p>
+                    </div>
+                    
+                    <div class="border-t border-gray-200 pt-4 mb-6">
+                        <h3 class="font-semibold text-lg mb-3">Booking Details</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4" id="bookingDetails">
+                            <!-- Booking details will be inserted here by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <button id="bookAnotherBtn" class="w-full bg-hotel-black text-white py-3 rounded-lg font-bold hover:bg-opacity-90 transition">
+                        Book Another Room
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/src/scripts/Booking/booking.js"></script>
+</body>
+</html>

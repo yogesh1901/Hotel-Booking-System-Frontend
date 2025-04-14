@@ -1,0 +1,690 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/public/Asset/fevicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/public/Asset/fevicon/favicon.svg" />
+    <link rel="shortcut icon" href="/public/Asset/fevicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/public/Asset/fevicon/apple-touch-icon.png" />
+    <link rel="manifest" href="/public/Asset/fevicon/site.webmanifest" />
+    <title>Hotel Admin Dashboard - Manage Booking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .header-bg {
+            background: linear-gradient(80deg, #c8b33f, #d79b2b);
+        }
+        .table-header {
+            background: linear-gradient(80deg, #c8b33f, #d79b2b);
+            color: white;
+        }
+        .active-nav {
+            background: linear-gradient(80deg, #c8b33f, #d79b2b);
+        }
+        .status-confirmed {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        .status-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        .status-cancelled {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        @media (max-width: 768px) {
+            .responsive-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 50;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-btn:hover {
+            color: black;
+        }
+        /* Pagination styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .page-item {
+            color: #ffffff;
+            margin: 0 0.25rem;
+        }
+        .page-link {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+            color: #3b82f6;
+            cursor: pointer;
+        }
+        .page-link:hover {
+            background-color: #f3f4f6;
+        }
+        .page-item.active .page-link {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        .page-item.disabled .page-link {
+            color: #9ca3af;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-64 bg-black text-white p-4 hidden md:block">
+            <div class="mb-8">
+                <h1 class="text-2xl font-bold">Admin</h1>
+                <p class="text-sm text-blue-200">admin@gmail.com</p>
+            </div>
+            
+            <nav>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="/src/Pages/Admin/dashboard.html" class="flex items-center p-2 rounded hover:bg-amber-200 dashboard-link " data-section="dashboard">
+                            <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageBooking.html" class="flex active-nav items-center p-2 rounded hover:bg-amber-200 booking-link" data-section="booking">
+                            <i class="fas fa-calendar-check mr-3"></i> Manage Booking
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageRooms.html" class="flex items-center p-2 rounded hover:bg-amber-200 rooms-link" data-section="rooms">
+                            <i class="fas fa-bed mr-3"></i> Manage Rooms
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageCustomer.html" class="flex items-center p-2 rounded hover:bg-amber-200 customers-link" data-section="customers">
+                            <i class="fas fa-users mr-3"></i> Manage Customer
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageFeedback.html" class="flex items-center p-2 rounded hover:bg-amber-200 feedback-link" data-section="feedback">
+                            <i class="fas fa-comment-alt mr-3"></i> Manage Feedback
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageContent.html" class="flex items-center p-2 rounded hover:bg-amber-200 content-link" data-section="content">
+                            <i class="fas fa-file-alt mr-3"></i> Manage Content
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageReports.html" class="flex items-center p-2 rounded hover:bg-amber-200 report-link" data-section="report">
+                            <i class="fas fa-chart-bar mr-3"></i> Manage Report
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="mt-8 pt-4 border-t border-blue-700">
+                    <a href="/src/Pages/Authentication/Login.html" class="flex items-center p-2 rounded hover:bg-amber-200 logout-link">
+                        <i class="fas fa-sign-out-alt mr-3"></i> Logout
+                    </a>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Mobile sidebar toggle -->
+        <div class="md:hidden fixed top-4 left-4 z-50">
+            <button id="sidebarToggle" class="p-2 rounded-md bg-amber-200 text-white">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile sidebar -->
+        <div id="mobileSidebar" class="fixed inset-0 bg-blue-800 text-white p-4 z-40 transform -translate-x-full transition-transform duration-300 md:hidden">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold">Admin</h1>
+                    <p class="text-sm text-blue-200">admin@gmail.com</p>
+                </div>
+                <button id="closeSidebar" class="p-2">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <nav>
+                <h2 class="text-lg font-semibold mb-2">Dashboard</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="/src/Pages/Admin/dashboard.html" class="flex items-center p-2 rounded hover:bg-amber-200 dashboard-link active-nav" data-section="dashboard">
+                            <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageBooking.html" class="flex items-center p-2 rounded hover:bg-amber-200 booking-link" data-section="booking">
+                            <i class="fas fa-calendar-check mr-3"></i> Manage Booking
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageRooms.html" class="flex items-center p-2 rounded hover:bg-amber-200 rooms-link" data-section="rooms">
+                            <i class="fas fa-bed mr-3"></i> Manage Rooms
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageCustomer.html" class="flex items-center p-2 rounded hover:bg-amber-200 customers-link" data-section="customers">
+                            <i class="fas fa-users mr-3"></i> Manage Customer
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageFeedback.html" class="flex items-center p-2 rounded hover:bg-amber-200 feedback-link" data-section="feedback">
+                            <i class="fas fa-comment-alt mr-3"></i> Manage Feedback
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageContent.html" class="flex items-center p-2 rounded hover:bg-amber-200 content-link" data-section="content">
+                            <i class="fas fa-file-alt mr-3"></i> Manage Content
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageReports.html" class="flex items-center p-2 rounded hover:bg-amber-200 report-link" data-section="report">
+                            <i class="fas fa-chart-bar mr-3"></i> Manage Report
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="mt-8 pt-4 border-t border-blue-700">
+                    <a href="/src/Pages/Authentication/Login.html" class="flex items-center p-2 rounded hover:bg-amber-200 logout-link">
+                        <i class="fas fa-sign-out-alt mr-3"></i> Logout
+                    </a>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 bg-amber-200 overflow-auto">
+            <div class="p-6">
+                <div class="mb-6 flex justify-between items-center">
+                    <h1 class="text-2xl font-bold">Manage Booking</h1>
+                    <div class="relative">
+                        <input type="text" placeholder="Search..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="responsive-table">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr class="table-header">
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">ID</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">CUSTOMER</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">ROOM</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">CHECK IN</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">CHECK OUT</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">STATUS</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="bookingTableBody">
+                                <!-- Table rows will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+                        <p class="text-sm text-gray-700" id="resultsInfo">
+                            Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span class="font-medium">25</span> results
+                        </p>
+                        <nav class="pagination" id="pagination">
+                            <!-- Pagination links will be dynamically inserted here -->
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 class="text-xl font-bold mb-4">Edit Booking #<span id="editBookingId"></span></h2>
+            <form id="editForm">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="editCustomer">Customer</label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="editCustomer" type="text">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="editRoom">Room Type</label>
+                    <select class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="editRoom">
+                        <option value="Suite">Suite</option>
+                        <option value="Deluxe">Deluxe</option>
+                        <option value="Standard">Standard</option>
+                        <option value="Family">Family</option>
+                        <option value="Executive">Executive</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="editCheckIn">Check In</label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="editCheckIn" type="date">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="editCheckOut">Check Out</label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="editCheckOut" type="date">
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="editStatus">Status</label>
+                    <select class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="editStatus">
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Cancelled">Cancelled</option>
+                        <option value="Checked In">Checked In</option>
+                        <option value="Checked Out">Checked Out</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" id="cancelEdit">Cancel</button>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 class="text-xl font-bold mb-4">Booking Details #<span id="viewBookingId"></span></h2>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <p class="font-bold text-gray-700">Customer:</p>
+                    <p id="viewCustomer"></p>
+                </div>
+                <div>
+                    <p class="font-bold text-gray-700">Room Type:</p>
+                    <p id="viewRoom"></p>
+                </div>
+                <div>
+                    <p class="font-bold text-gray-700">Check In:</p>
+                    <p id="viewCheckIn"></p>
+                </div>
+                <div>
+                    <p class="font-bold text-gray-700">Check Out:</p>
+                    <p id="viewCheckOut"></p>
+                </div>
+                <div>
+                    <p class="font-bold text-gray-700">Status:</p>
+                    <p id="viewStatus"></p>
+                </div>
+                <div>
+                    <p class="font-bold text-gray-700">Guests:</p>
+                    <p id="viewGuests"></p>
+                </div>
+                <div>
+                    <p class="font-bold text-gray-700">Special Requests:</p>
+                    <p id="viewRequests"></p>
+                </div>
+                <div>
+                    <p class="font-bold text-gray-700">Total Amount:</p>
+                    <p id="viewAmount"></p>
+                </div>
+            </div>
+            <div class="flex justify-end">
+                <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="closeView">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get modal elements
+            const editModal = document.getElementById('editModal');
+            const viewModal = document.getElementById('viewModal');
+            const closeBtns = document.querySelectorAll('.close-btn, #cancelEdit, #closeView');
+            const tableBody = document.getElementById('bookingTableBody');
+            const searchInput = document.querySelector('input[type="text"]');
+            const searchIcon = document.querySelector('.fa-search');
+            const paginationContainer = document.getElementById('pagination');
+            const resultsInfo = document.getElementById('resultsInfo');
+            
+            // Configuration
+            const itemsPerPage = 10;
+            let currentPage = 1;
+            let filteredBookings = [];
+            
+            // Sample data - in a real app, this would come from your backend
+            let bookings = [
+                { id: '25', customer: 'Yogesh', room: 'Suite', checkIn: '2025-03-25', checkOut: '2025-03-28', status: 'Confirmed', guests: 2, requests: 'Early check-in', amount: '$1200' },
+                { id: '24', customer: 'Rahul', room: 'Deluxe', checkIn: '2025-03-24', checkOut: '2025-03-26', status: 'Confirmed', guests: 1, requests: 'None', amount: '$800' },
+                { id: '23', customer: 'Priya', room: 'Standard', checkIn: '2025-03-23', checkOut: '2025-03-25', status: 'Pending', guests: 2, requests: 'Twin beds', amount: '$600' },
+                { id: '22', customer: 'Ankit', room: 'Deluxe', checkIn: '2025-03-22', checkOut: '2025-03-24', status: 'Cancelled', guests: 3, requests: 'Extra bed', amount: '$900' },
+                { id: '21', customer: 'Sneha', room: 'Executive', checkIn: '2025-03-21', checkOut: '2025-03-23', status: 'Checked Out', guests: 2, requests: 'Late checkout', amount: '$1000' },
+                { id: '20', customer: 'Vikram', room: 'Family', checkIn: '2025-03-20', checkOut: '2025-03-22', status: 'Checked In', guests: 4, requests: 'Adjoining rooms', amount: '$1500' },
+                { id: '19', customer: 'Neha', room: 'Suite', checkIn: '2025-03-19', checkOut: '2025-03-21', status: 'Confirmed', guests: 2, requests: 'Honeymoon package', amount: '$1400' },
+                { id: '18', customer: 'Raj', room: 'Standard', checkIn: '2025-03-18', checkOut: '2025-03-20', status: 'Confirmed', guests: 1, requests: 'None', amount: '$500' },
+                { id: '17', customer: 'Priyanka', room: 'Deluxe', checkIn: '2025-03-17', checkOut: '2025-03-19', status: 'Cancelled', guests: 2, requests: 'Airport pickup', amount: '$850' },
+                { id: '16', customer: 'Amit', room: 'Executive', checkIn: '2025-03-16', checkOut: '2025-03-18', status: 'Checked Out', guests: 3, requests: 'Meeting room', amount: '$1200' },
+                { id: '15', customer: 'Deepak', room: 'Family', checkIn: '2025-03-15', checkOut: '2025-03-17', status: 'Confirmed', guests: 5, requests: 'Extra towels', amount: '$1800' },
+                { id: '14', customer: 'Meera', room: 'Suite', checkIn: '2025-03-14', checkOut: '2025-03-16', status: 'Pending', guests: 2, requests: 'Vegetarian meals', amount: '$1300' },
+                { id: '13', customer: 'Karan', room: 'Standard', checkIn: '2025-03-13', checkOut: '2025-03-15', status: 'Confirmed', guests: 1, requests: 'None', amount: '$550' },
+                { id: '12', customer: 'Sunita', room: 'Deluxe', checkIn: '2025-03-12', checkOut: '2025-03-14', status: 'Checked In', guests: 2, requests: 'Spa appointment', amount: '$900' },
+                { id: '11', customer: 'Vivek', room: 'Executive', checkIn: '2025-03-11', checkOut: '2025-03-13', status: 'Checked Out', guests: 2, requests: 'Dinner reservation', amount: '$1100' },
+                { id: '10', customer: 'Pooja', room: 'Family', checkIn: '2025-03-10', checkOut: '2025-03-12', status: 'Confirmed', guests: 4, requests: 'Baby crib', amount: '$1600' },
+                { id: '9', customer: 'Ravi', room: 'Suite', checkIn: '2025-03-09', checkOut: '2025-03-11', status: 'Cancelled', guests: 2, requests: 'None', amount: '$1250' },
+                { id: '8', customer: 'Anjali', room: 'Standard', checkIn: '2025-03-08', checkOut: '2025-03-10', status: 'Confirmed', guests: 1, requests: 'Wake-up call', amount: '$500' },
+                { id: '7', customer: 'Sanjay', room: 'Deluxe', checkIn: '2025-03-07', checkOut: '2025-03-09', status: 'Pending', guests: 3, requests: 'Extra pillows', amount: '$950' },
+                { id: '6', customer: 'Divya', room: 'Executive', checkIn: '2025-03-06', checkOut: '2025-03-08', status: 'Checked Out', guests: 2, requests: 'Tour booking', amount: '$1050' },
+                { id: '5', customer: 'Arun', room: 'Family', checkIn: '2025-03-05', checkOut: '2025-03-07', status: 'Confirmed', guests: 6, requests: 'Connecting rooms', amount: '$2100' },
+                { id: '4', customer: 'Shreya', room: 'Suite', checkIn: '2025-03-04', checkOut: '2025-03-06', status: 'Checked In', guests: 2, requests: 'Champagne', amount: '$1350' },
+                { id: '3', customer: 'Manoj', room: 'Standard', checkIn: '2025-03-03', checkOut: '2025-03-05', status: 'Confirmed', guests: 1, requests: 'None', amount: '$450' },
+                { id: '2', customer: 'Kavita', room: 'Deluxe', checkIn: '2025-03-02', checkOut: '2025-03-04', status: 'Cancelled', guests: 2, requests: 'Flowers in room', amount: '$800' },
+                { id: '1', customer: 'Nitin', room: 'Executive', checkIn: '2025-03-01', checkOut: '2025-03-03', status: 'Checked Out', guests: 3, requests: 'Business center access', amount: '$1200' }
+            ];
+            
+            // Initialize the table
+            function initTable() {
+                filteredBookings = [...bookings];
+                renderTable();
+                renderPagination();
+                updateResultsInfo();
+            }
+            
+            // Render table rows
+            function renderTable() {
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                const bookingsToShow = filteredBookings.slice(startIndex, endIndex);
+                
+                tableBody.innerHTML = '';
+                
+                bookingsToShow.forEach(booking => {
+                    const row = document.createElement('tr');
+                    row.setAttribute('data-id', booking.id);
+                    
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">#${booking.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${booking.customer}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${booking.room}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${formatDate(booking.checkIn)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${formatDate(booking.checkOut)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full status-${booking.status.toLowerCase().replace(' ', '-')}">${booking.status}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap space-x-2">
+                            <button class="text-blue-600 hover:text-blue-900 edit-btn" data-id="${booking.id}">Edit</button>
+                            <button class="text-blue-600 hover:text-blue-900 view-btn" data-id="${booking.id}">View</button>
+                            <button class="text-red-600 hover:text-red-900 delete-btn" data-id="${booking.id}">Delete</button>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+                
+                // Add event listeners to the new buttons
+                addEventListeners();
+            }
+            
+            // Render pagination
+            function renderPagination() {
+                const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
+                
+                if (totalPages <= 1) {
+                    paginationContainer.innerHTML = '';
+                    return;
+                }
+                
+                let paginationHTML = '';
+                
+                // Previous button
+                paginationHTML += `
+                    <li class="page-item  ${currentPage === 1 ? 'disabled' : ''}">
+                        <a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a>
+                    </li>
+                `;
+                
+                // Page numbers
+                for (let i = 1; i <= totalPages; i++) {
+                    paginationHTML += `
+                        <li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#" data-page="${i}">${i}</a>
+                        </li>
+                    `;
+                }
+                
+                // Next button
+                paginationHTML += `
+                    <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                        <a class="page-link" href="#" data-page="${currentPage + 1}">Next</a>
+                    </li>
+                `;
+                
+                paginationContainer.innerHTML = paginationHTML;
+                
+                // Add event listeners to pagination links
+                document.querySelectorAll('.page-link').forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const page = parseInt(this.getAttribute('data-page'));
+                        if (page >= 1 && page <= totalPages) {
+                            currentPage = page;
+                            renderTable();
+                            renderPagination();
+                            updateResultsInfo();
+                        }
+                    });
+                });
+            }
+            
+            // Update results info
+            function updateResultsInfo() {
+                const startIndex = (currentPage - 1) * itemsPerPage + 1;
+                const endIndex = Math.min(currentPage * itemsPerPage, filteredBookings.length);
+                
+                resultsInfo.innerHTML = `
+                    Showing <span class="font-medium">${startIndex}</span> to <span class="font-medium">${endIndex}</span> of <span class="font-medium">${filteredBookings.length}</span> results
+                `;
+            }
+            
+            // Format date from YYYY-MM-DD to DD-MM-YY
+            function formatDate(dateString) {
+                const [year, month, day] = dateString.split('-');
+                return `${day}-${month}-${year.slice(-2)}`;
+            }
+            
+            // Add event listeners to table buttons
+            function addEventListeners() {
+                // Edit button functionality
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const bookingId = this.getAttribute('data-id');
+                        const booking = bookings.find(b => b.id === bookingId);
+                        
+                        document.getElementById('editBookingId').textContent = bookingId;
+                        document.getElementById('editCustomer').value = booking.customer;
+                        document.getElementById('editRoom').value = booking.room;
+                        document.getElementById('editCheckIn').value = booking.checkIn;
+                        document.getElementById('editCheckOut').value = booking.checkOut;
+                        document.getElementById('editStatus').value = booking.status;
+                        
+                        editModal.style.display = 'block';
+                    });
+                });
+                
+                // View button functionality
+                document.querySelectorAll('.view-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const bookingId = this.getAttribute('data-id');
+                        const booking = bookings.find(b => b.id === bookingId);
+                        
+                        document.getElementById('viewBookingId').textContent = bookingId;
+                        document.getElementById('viewCustomer').textContent = booking.customer;
+                        document.getElementById('viewRoom').textContent = booking.room;
+                        document.getElementById('viewCheckIn').textContent = formatDate(booking.checkIn);
+                        document.getElementById('viewCheckOut').textContent = formatDate(booking.checkOut);
+                        document.getElementById('viewStatus').textContent = booking.status;
+                        document.getElementById('viewGuests').textContent = booking.guests;
+                        document.getElementById('viewRequests').textContent = booking.requests || 'None';
+                        document.getElementById('viewAmount').textContent = booking.amount;
+                        
+                        viewModal.style.display = 'block';
+                    });
+                });
+                
+                // Delete button functionality
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const bookingId = this.getAttribute('data-id');
+                        if (confirm(`Are you sure you want to delete booking #${bookingId}?`)) {
+                            // In a real app, you would make an API call to delete the booking
+                            bookings = bookings.filter(b => b.id !== bookingId);
+                            filteredBookings = filteredBookings.filter(b => b.id !== bookingId);
+                            
+                            // If we deleted the last item on the current page, go to previous page
+                            if (filteredBookings.length <= (currentPage - 1) * itemsPerPage && currentPage > 1) {
+                                currentPage--;
+                            }
+                            
+                            renderTable();
+                            renderPagination();
+                            updateResultsInfo();
+                            
+                            alert(`Booking #${bookingId} deleted successfully!`);
+                        }
+                    });
+                });
+            }
+            
+            // Search functionality
+            function performSearch() {
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                if (searchTerm === '') {
+                    filteredBookings = [...bookings];
+                } else {
+                    filteredBookings = bookings.filter(booking => {
+                        return (
+                            booking.id.toLowerCase().includes(searchTerm) || 
+                            booking.customer.toLowerCase().includes(searchTerm) || 
+                            booking.room.toLowerCase().includes(searchTerm) || 
+                            formatDate(booking.checkIn).toLowerCase().includes(searchTerm) || 
+                            formatDate(booking.checkOut).toLowerCase().includes(searchTerm) || 
+                            booking.status.toLowerCase().includes(searchTerm)
+                        );
+                    });
+                }
+                
+                currentPage = 1;
+                renderTable();
+                renderPagination();
+                updateResultsInfo();
+            }
+            
+            // Event listeners for search
+            searchInput.addEventListener('keyup', performSearch);
+            searchIcon.addEventListener('click', performSearch);
+            
+            // Close modals
+            closeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    editModal.style.display = 'none';
+                    viewModal.style.display = 'none';
+                });
+            });
+            
+            // Close when clicking outside modal
+            window.addEventListener('click', function(event) {
+                if (event.target === editModal) {
+                    editModal.style.display = 'none';
+                }
+                if (event.target === viewModal) {
+                    viewModal.style.display = 'none';
+                }
+            });
+            
+            // Form submission
+            document.getElementById('editForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const bookingId = document.getElementById('editBookingId').textContent;
+                
+                // Get updated values
+                const updatedBooking = {
+                    id: bookingId,
+                    customer: document.getElementById('editCustomer').value,
+                    room: document.getElementById('editRoom').value,
+                    checkIn: document.getElementById('editCheckIn').value,
+                    checkOut: document.getElementById('editCheckOut').value,
+                    status: document.getElementById('editStatus').value,
+                    guests: bookings.find(b => b.id === bookingId).guests,
+                    requests: bookings.find(b => b.id === bookingId).requests,
+                    amount: bookings.find(b => b.id === bookingId).amount
+                };
+                
+                // Update the bookings data
+                const index = bookings.findIndex(b => b.id === bookingId);
+                if (index !== -1) {
+                    bookings[index] = updatedBooking;
+                }
+                
+                // Update the filtered bookings if needed
+                const filteredIndex = filteredBookings.findIndex(b => b.id === bookingId);
+                if (filteredIndex !== -1) {
+                    filteredBookings[filteredIndex] = updatedBooking;
+                }
+                
+                // Update the table
+                renderTable();
+                
+                // Close modal
+                editModal.style.display = 'none';
+                
+                // Show success message
+                alert(`Booking #${bookingId} updated successfully!`);
+            });
+            
+            // Initialize the table
+            initTable();
+            
+            // Mobile sidebar toggle
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const mobileSidebar = document.getElementById('mobileSidebar');
+            const closeSidebar = document.getElementById('closeSidebar');
+            
+            sidebarToggle.addEventListener('click', function() {
+                mobileSidebar.style.transform = 'translateX(0)';
+            });
+            
+            closeSidebar.addEventListener('click', function() {
+                mobileSidebar.style.transform = 'translateX(-100%)';
+            });
+        });
+    </script>
+</body>
+</html>

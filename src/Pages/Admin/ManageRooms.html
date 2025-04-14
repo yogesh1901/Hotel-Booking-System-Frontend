@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/public/Asset/fevicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/public/Asset/fevicon/favicon.svg" />
+    <link rel="shortcut icon" href="/public/Asset/fevicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/public/Asset/fevicon/apple-touch-icon.png" />
+    <link rel="manifest" href="/public/Asset/fevicon/site.webmanifest" />
+    <title>Hotel Admin Dashboard - Manage Rooms</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .container-div {
+            background: linear-gradient(80deg, #c8b33f, #d79b2b);
+        }
+        .table-header {
+            background: linear-gradient(80deg, #c8b33f, #d79b2b);
+            color: white;
+        }
+        .active-nav {
+            background: linear-gradient(80deg, #c8b33f, #d79b2b);
+        }
+        .status-available {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        .status-occupied {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        .status-maintenance {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        @media (max-width: 768px) {
+            .responsive-table {
+                display: block;
+                overflow-x: auto;
+            }
+            .action-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 50;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-btn:hover {
+            color: black;
+        }
+        .pagination-active {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen">
+        <div class="w-64 bg-black text-white p-4 hidden md:block">
+            <div class="mb-8">
+                <h1 class="text-2xl font-bold">Admin</h1>
+                <p class="text-sm text-blue-200">admin@gmail.com</p>
+            </div>
+            
+            <nav>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="/src/Pages/Admin/dashboard.html" class="flex items-center p-2 rounded hover:bg-amber-200 dashboard-link " data-section="dashboard">
+                            <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageBooking.html" class="flex items-center p-2 rounded hover:bg-amber-200 booking-link" data-section="booking">
+                            <i class="fas fa-calendar-check mr-3"></i> Manage Booking
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageRooms.html" class="flex items-center p-2 rounded hover:bg-amber-200 rooms-link active-nav" data-section="rooms">
+                            <i class="fas fa-bed mr-3"></i> Manage Rooms
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageCustomer.html" class="flex items-center p-2 rounded hover:bg-amber-200 customers-link" data-section="customers">
+                            <i class="fas fa-users mr-3"></i> Manage Customer
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageFeedback.html" class="flex items-center p-2 rounded hover:bg-amber-200 feedback-link" data-section="feedback">
+                            <i class="fas fa-comment-alt mr-3"></i> Manage Feedback
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageContent.html" class="flex items-center p-2 rounded hover:bg-amber-200 content-link" data-section="content">
+                            <i class="fas fa-file-alt mr-3"></i> Manage Content
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageReports.html" class="flex items-center p-2 rounded hover:bg-amber-200 report-link" data-section="report">
+                            <i class="fas fa-chart-bar mr-3"></i> Manage Report
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="mt-8 pt-4 border-t border-blue-700">
+                    <a href="/src/Pages/Authentication/Login.html" class="flex items-center p-2 rounded hover:bg-amber-200 logout-link">
+                        <i class="fas fa-sign-out-alt mr-3"></i> Logout
+                    </a>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Mobile sidebar toggle -->
+        <div class="md:hidden fixed top-4 left-4 z-50">
+            <button id="sidebarToggle" class="p-2 rounded-md bg-amber-200 text-white">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile sidebar -->
+        <div id="mobileSidebar" class="fixed inset-0 bg-blue-800 text-white p-4 z-40 transform -translate-x-full transition-transform duration-300 md:hidden">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold">Admin</h1>
+                    <p class="text-sm text-blue-200">admin@gmail.com</p>
+                </div>
+                <button id="closeSidebar" class="p-2">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <nav>
+                <h2 class="text-lg font-semibold mb-2">Dashboard</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="/src/Pages/Admin/dashboard.html" class="flex items-center p-2 rounded hover:bg-amber-200 dashboard-link " data-section="dashboard">
+                            <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageBooking.html" class="flex items-center p-2 rounded hover:bg-amber-200 booking-link" data-section="booking">
+                            <i class="fas fa-calendar-check mr-3"></i> Manage Booking
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageRooms.html" class="flex items-center p-2 rounded hover:bg-amber-200 rooms-link active-nav" data-section="rooms">
+                            <i class="fas fa-bed mr-3"></i> Manage Rooms
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageCustomer.html" class="flex items-center p-2 rounded hover:bg-amber-200 customers-link" data-section="customers">
+                            <i class="fas fa-users mr-3"></i> Manage Customer
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageFeedback.html" class="flex items-center p-2 rounded hover:bg-amber-200 feedback-link" data-section="feedback">
+                            <i class="fas fa-comment-alt mr-3"></i> Manage Feedback
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageContent.html" class="flex items-center p-2 rounded hover:bg-amber-200 content-link" data-section="content">
+                            <i class="fas fa-file-alt mr-3"></i> Manage Content
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageReports.html" class="flex items-center p-2 rounded hover:bg-amber-200 report-link" data-section="report">
+                            <i class="fas fa-chart-bar mr-3"></i> Manage Report
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="mt-8 pt-4 border-t border-blue-700">
+                    <a href="/src/Pages/Authentication/Login.html" class="flex items-center p-2 rounded hover:bg-amber-200 logout-link">
+                        <i class="fas fa-sign-out-alt mr-3"></i> Logout
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 bg-amber-200 overflow-auto">
+            <section id="rooms" class="p-6 ">
+                <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <h1 class="text-2xl font-bold">Manage Rooms</h1>
+                    <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+                        <div class="relative w-full md:w-64">
+                            <input type="text" placeholder="Search rooms..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                        <button id="addRoomBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition whitespace-nowrap">
+                            <i class="fas fa-plus mr-2"></i> Add Room
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="responsive-table">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr class="table-header">
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Room Number</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Room Type</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Capacity</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Price</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="roomsTableBody">
+                                <!-- Room data will be inserted here by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+                        <div class="flex-1 flex justify-between sm:hidden">
+                            <button id="mobilePrevBtn" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Previous</button>
+                            <button id="mobileNextBtn" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Next</button>
+                        </div>
+                        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                            <div>
+                                <p class="text-sm text-gray-700" id="resultsInfo">
+                                    Showing <span class="font-medium">1</span> to <span class="font-medium">5</span> of <span class="font-medium">15</span> results
+                                </p>
+                            </div>
+                            <div>
+                                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination" id="paginationNav">
+                                    <!-- Pagination links will be inserted here by JavaScript -->
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Add/Edit Room Modal -->
+    <div id="roomModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 class="text-xl font-bold mb-4" id="modalTitle">Add New Room</h2>
+            <form id="roomForm">
+                <input type="hidden" id="roomId">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="roomNumber">Room Number</label>
+                        <input type="text" id="roomNumber" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="roomType">Room Type</label>
+                        <select id="roomType" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="Standard">Standard</option>
+                            <option value="Deluxe">Deluxe</option>
+                            <option value="Suite">Suite</option>
+                            <option value="Family">Family</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="roomCapacity">Capacity</label>
+                        <select id="roomCapacity" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="1 Person">1 Person</option>
+                            <option value="2 Persons">2 Persons</option>
+                            <option value="4 Persons">4 Persons</option>
+                            <option value="6 Persons">6 Persons</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="roomPrice">Price (₹/night)</label>
+                        <input type="number" id="roomPrice" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="roomStatus">Status</label>
+                    <select id="roomStatus" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="Available">Available</option>
+                        <option value="Occupied">Occupied</option>
+                        <option value="Maintenance">Maintenance</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" id="cancelRoom">Cancel</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Save Room</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // ========== SIDEBAR FUNCTIONALITY ==========
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const mobileSidebar = document.getElementById('mobileSidebar');
+        const closeSidebar = document.getElementById('closeSidebar');
+        
+        sidebarToggle.addEventListener('click', function() {
+            mobileSidebar.classList.remove('-translate-x-full');
+        });
+        
+        closeSidebar.addEventListener('click', function() {
+            mobileSidebar.classList.add('-translate-x-full');
+        });
+
+        // ========== ROOM DATA MANAGEMENT ==========
+        // Sample room data with additional fields
+        let rooms = {
+            '101': { id: '101', type: 'Standard', capacity: '2 Persons', price: '1000', status: 'Available' },
+            '102': { id: '102', type: 'Deluxe', capacity: '4 Persons', price: '4000', status: 'Occupied' },
+            '103': { id: '103', type: 'Suite', capacity: '2 Persons', price: '5000', status: 'Available' },
+            '104': { id: '104', type: 'Standard', capacity: '2 Persons', price: '1000', status: 'Available' },
+            '105': { id: '105', type: 'Deluxe', capacity: '4 Persons', price: '4000', status: 'Maintenance' },
+            '106': { id: '106', type: 'Suite', capacity: '2 Persons', price: '5000', status: 'Available' },
+            '107': { id: '107', type: 'Family', capacity: '6 Persons', price: '6000', status: 'Occupied' },
+            '201': { id: '201', type: 'Family', capacity: '6 Persons', price: '6000', status: 'Maintenance' },
+            '202': { id: '202', type: 'Standard', capacity: '2 Persons', price: '1000', status: 'Available' },
+            '203': { id: '203', type: 'Deluxe', capacity: '4 Persons', price: '4000', status: 'Available' },
+            '204': { id: '204', type: 'Suite', capacity: '2 Persons', price: '5000', status: 'Occupied' },
+            '205': { id: '205', type: 'Standard', capacity: '2 Persons', price: '1000', status: 'Maintenance' },
+            '206': { id: '206', type: 'Deluxe', capacity: '4 Persons', price: '4000', status: 'Available' },
+            '207': { id: '207', type: 'Suite', capacity: '2 Persons', price: '5000', status: 'Available' },
+            '301': { id: '301', type: 'Family', capacity: '6 Persons', price: '6000', status: 'Occupied' },
+            '302': { id: '302', type: 'Standard', capacity: '2 Persons', price: '1000', status: 'Available' },
+            '303': { id: '303', type: 'Deluxe', capacity: '4 Persons', price: '4000', status: 'Maintenance' },
+            '304': { id: '304', type: 'Suite', capacity: '2 Persons', price: '5000', status: 'Available' },
+            '305': { id: '305', type: 'Standard', capacity: '2 Persons', price: '1000', status: 'Available' },
+            '306': { id: '306', type: 'Deluxe', capacity: '4 Persons', price: '4000', status: 'Occupied' }
+        };
+
+        // ========== PAGINATION CONFIG ==========
+        const itemsPerPage = 5;
+        let currentPage = 1;
+        let filteredRooms = Object.values(rooms);
+        const tableBody = document.getElementById('roomsTableBody');
+        const paginationNav = document.getElementById('paginationNav');
+        const resultsInfo = document.getElementById('resultsInfo');
+        const mobilePrevBtn = document.getElementById('mobilePrevBtn');
+        const mobileNextBtn = document.getElementById('mobileNextBtn');
+
+        // ========== INITIAL SETUP ==========
+        renderTable();
+        setupPagination();
+
+        // ========== MODAL FUNCTIONALITY ==========
+        const roomModal = document.getElementById('roomModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const roomForm = document.getElementById('roomForm');
+        const closeBtns = document.querySelectorAll('.close-btn, #cancelRoom');
+
+        // Add room button
+        document.getElementById('addRoomBtn').addEventListener('click', function() {
+            modalTitle.textContent = 'Add New Room';
+            roomForm.reset();
+            document.getElementById('roomId').value = '';
+            roomModal.style.display = 'block';
+        });
+
+        // ========== FORM HANDLING ==========
+        roomForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const roomId = document.getElementById('roomId').value;
+            const isEdit = roomId !== '';
+            const roomNumber = document.getElementById('roomNumber').value;
+            
+            // Collect form data
+            const formData = {
+                type: document.getElementById('roomType').value,
+                capacity: document.getElementById('roomCapacity').value,
+                price: document.getElementById('roomPrice').value,
+                status: document.getElementById('roomStatus').value
+            };
+
+            if (isEdit) {
+                // Update existing room
+                rooms[roomId] = { ...rooms[roomId], ...formData };
+            } else {
+                // Add new room
+                if (rooms[roomNumber]) {
+                    alert('Room with this number already exists!');
+                    return;
+                }
+                
+                rooms[roomNumber] = { id: roomNumber, ...formData };
+            }
+            
+            // Update filtered rooms and reset to first page
+            filteredRooms = Object.values(rooms);
+            currentPage = 1;
+            renderTable();
+            setupPagination();
+            
+            // Show success message
+            alert(`Room ${isEdit ? 'updated' : 'added'} successfully!`);
+            roomModal.style.display = 'none';
+        });
+
+        // ========== TABLE OPERATIONS ==========
+        function renderTable() {
+            tableBody.innerHTML = '';
+            
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, filteredRooms.length);
+            
+            for (let i = startIndex; i < endIndex; i++) {
+                const room = filteredRooms[i];
+                const row = document.createElement('tr');
+                row.setAttribute('data-id', room.id);
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">${room.id}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${room.type}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${room.capacity}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">₹${room.price}/night</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full status-${room.status.toLowerCase()}">
+                            ${room.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap space-x-2 action-buttons">
+                        <button class="text-blue-600 hover:text-blue-900 edit-room" data-id="${room.id}">
+                            <i class="fas fa-edit mr-1"></i> Edit
+                        </button>
+                        <button class="text-red-600 hover:text-red-900 delete-room" data-id="${room.id}">
+                            <i class="fas fa-trash mr-1"></i> Delete
+                        </button>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            }
+            
+            // Attach event listeners to new buttons
+            document.querySelectorAll('.edit-room').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const roomId = this.getAttribute('data-id');
+                    const room = rooms[roomId];
+                    
+                    modalTitle.textContent = `Edit Room ${roomId}`;
+                    document.getElementById('roomId').value = roomId;
+                    document.getElementById('roomNumber').value = roomId;
+                    document.getElementById('roomType').value = room.type;
+                    document.getElementById('roomCapacity').value = room.capacity;
+                    document.getElementById('roomPrice').value = room.price;
+                    document.getElementById('roomStatus').value = room.status;
+                    
+                    roomModal.style.display = 'block';
+                });
+            });
+            
+            document.querySelectorAll('.delete-room').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const roomId = this.getAttribute('data-id');
+                    
+                    if (confirm(`Are you sure you want to delete Room ${roomId}? This action cannot be undone.`)) {
+                        delete rooms[roomId];
+                        filteredRooms = filteredRooms.filter(room => room.id !== roomId);
+                        
+                        // Adjust current page if we deleted the last item on the page
+                        const totalPages = Math.ceil(filteredRooms.length / itemsPerPage);
+                        if (currentPage > totalPages && totalPages > 0) {
+                            currentPage = totalPages;
+                        } else if (totalPages === 0) {
+                            currentPage = 1;
+                        }
+                        
+                        renderTable();
+                        setupPagination();
+                        alert(`Room ${roomId} has been deleted successfully!`);
+                    }
+                });
+            });
+            
+            // Update results info
+            updateResultsInfo();
+        }
+
+        // ========== PAGINATION FUNCTIONALITY ==========
+        function setupPagination() {
+            paginationNav.innerHTML = '';
+            const totalPages = Math.ceil(filteredRooms.length / itemsPerPage);
+            
+            if (totalPages <= 1) return;
+            
+            // Previous button
+            const prevBtn = document.createElement('a');
+            prevBtn.href = '#';
+            prevBtn.className = 'relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50';
+            prevBtn.innerHTML = '<span class="sr-only">Previous</span><i class="fas fa-chevron-left"></i>';
+            prevBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderTable();
+                    updatePaginationButtons();
+                }
+            });
+            paginationNav.appendChild(prevBtn);
+            
+            // Page numbers
+            const maxVisiblePages = 5;
+            let startPage, endPage;
+            
+            if (totalPages <= maxVisiblePages) {
+                startPage = 1;
+                endPage = totalPages;
+            } else {
+                const maxPagesBeforeCurrent = Math.floor(maxVisiblePages / 2);
+                const maxPagesAfterCurrent = Math.ceil(maxVisiblePages / 2) - 1;
+                
+                if (currentPage <= maxPagesBeforeCurrent) {
+                    startPage = 1;
+                    endPage = maxVisiblePages;
+                } else if (currentPage + maxPagesAfterCurrent >= totalPages) {
+                    startPage = totalPages - maxVisiblePages + 1;
+                    endPage = totalPages;
+                } else {
+                    startPage = currentPage - maxPagesBeforeCurrent;
+                    endPage = currentPage + maxPagesAfterCurrent;
+                }
+            }
+            
+            // First page + ellipsis if needed
+            if (startPage > 1) {
+                const firstPageBtn = createPageButton(1);
+                paginationNav.appendChild(firstPageBtn);
+                
+                if (startPage > 2) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.className = 'relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700';
+                    ellipsis.textContent = '...';
+                    paginationNav.appendChild(ellipsis);
+                }
+            }
+            
+            // Page range
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = createPageButton(i);
+                if (i === currentPage) {
+                    pageBtn.classList.add('pagination-active');
+                }
+                paginationNav.appendChild(pageBtn);
+            }
+            
+            // Last page + ellipsis if needed
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.className = 'relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700';
+                    ellipsis.textContent = '...';
+                    paginationNav.appendChild(ellipsis);
+                }
+                
+                const lastPageBtn = createPageButton(totalPages);
+                paginationNav.appendChild(lastPageBtn);
+            }
+            
+            // Next button
+            const nextBtn = document.createElement('a');
+            nextBtn.href = '#';
+            nextBtn.className = 'relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50';
+            nextBtn.innerHTML = '<span class="sr-only">Next</span><i class="fas fa-chevron-right"></i>';
+            nextBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderTable();
+                    updatePaginationButtons();
+                }
+            });
+            paginationNav.appendChild(nextBtn);
+            
+            // Mobile pagination buttons
+            mobilePrevBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderTable();
+                    updatePaginationButtons();
+                }
+            });
+            
+            mobileNextBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderTable();
+                    updatePaginationButtons();
+                }
+            });
+        }
+        
+        function createPageButton(pageNumber) {
+            const pageBtn = document.createElement('a');
+            pageBtn.href = '#';
+            pageBtn.className = 'relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50';
+            pageBtn.textContent = pageNumber;
+            pageBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                currentPage = pageNumber;
+                renderTable();
+                updatePaginationButtons();
+            });
+            return pageBtn;
+        }
+        
+        function updatePaginationButtons() {
+            const buttons = paginationNav.querySelectorAll('a');
+            buttons.forEach(button => {
+                button.classList.remove('pagination-active');
+                if (parseInt(button.textContent) === currentPage && !isNaN(parseInt(button.textContent))) {
+                    button.classList.add('pagination-active');
+                }
+            });
+        }
+        
+        function updateResultsInfo() {
+            const startIndex = (currentPage - 1) * itemsPerPage + 1;
+            const endIndex = Math.min(startIndex + itemsPerPage - 1, filteredRooms.length);
+            
+            resultsInfo.innerHTML = `
+                Showing <span class="font-medium">${startIndex}</span> to <span class="font-medium">${endIndex}</span> of <span class="font-medium">${filteredRooms.length}</span> results
+            `;
+        }
+
+        // ========== SEARCH FUNCTIONALITY ==========
+        const searchInput = document.querySelector('input[type="text"]');
+        const searchIcon = document.querySelector('.fa-search');
+        
+        function performSearch() {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            if (searchTerm === '') {
+                filteredRooms = Object.values(rooms);
+            } else {
+                filteredRooms = Object.values(rooms).filter(room => {
+                    return room.id.toLowerCase().includes(searchTerm) || 
+                           room.type.toLowerCase().includes(searchTerm) || 
+                           room.capacity.toLowerCase().includes(searchTerm) || 
+                           room.price.toString().includes(searchTerm) || 
+                           room.status.toLowerCase().includes(searchTerm);
+                });
+            }
+            
+            currentPage = 1;
+            renderTable();
+            setupPagination();
+        }
+        
+        searchInput.addEventListener('input', performSearch);
+        searchIcon.addEventListener('click', performSearch);
+
+        // ========== MODAL CLOSE HANDLERS ==========
+        closeBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                roomModal.style.display = 'none';
+            });
+        });
+        
+        window.addEventListener('click', function(event) {
+            if (event.target === roomModal) {
+                roomModal.style.display = 'none';
+            }
+        });
+    });
+    </script>
+</body>
+</html>

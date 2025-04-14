@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/public/Asset/fevicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/public/Asset/fevicon/favicon.svg" />
+    <link rel="shortcut icon" href="/public/Asset/fevicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/public/Asset/fevicon/apple-touch-icon.png" />
+    <link rel="manifest" href="/public/Asset/fevicon/site.webmanifest" />
+    <title>Hotel Admin Dashboard - Manage Customers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .container-div {
+            background: linear-gradient(80deg, #c8b33f, #d79b2b);
+        }
+        .table-header {
+            background: linear-gradient(80deg, #c8b33f, #d79b2b);
+            color: white;
+        }
+        .active-nav {
+            background: linear-gradient(80deg, #c8b33f, #d79b2b);
+        }
+        .status-active {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        .status-blocked {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        @media (max-width: 768px) {
+            .responsive-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 50;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-btn:hover {
+            color: black;
+        }
+        /* Pagination styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .page-item {
+            color: rgb(255, 255, 255);
+            margin: 0 0.25rem;
+        }
+        .page-link {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+            color: #3b82f6;
+            cursor: pointer;
+        }
+        .page-link:hover {
+            background-color: #f3f4f6;
+        }
+        .page-item.active .page-link {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        .page-item.disabled .page-link {
+            color: #9ca3af;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen">
+        <div class="w-64 bg-black text-white p-4 hidden md:block">
+            <div class="mb-8">
+                <h1 class="text-2xl font-bold">Admin</h1>
+                <p class="text-sm text-blue-200">admin@gmail.com</p>
+            </div>
+            
+            <nav>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="/src/Pages/Admin/dashboard.html" class="flex items-center p-2 rounded hover:bg-amber-200 dashboard-link " data-section="dashboard">
+                            <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageBooking.html" class="flex items-center p-2 rounded hover:bg-amber-200 booking-link" data-section="booking">
+                            <i class="fas fa-calendar-check mr-3"></i> Manage Booking
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageRooms.html" class="flex items-center p-2 rounded hover:bg-amber-200 rooms-link" data-section="rooms">
+                            <i class="fas fa-bed mr-3"></i> Manage Rooms
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageCustomer.html" class="flex items-center p-2 rounded hover:bg-amber-200 customers-link active-nav" data-section="customers">
+                            <i class="fas fa-users mr-3"></i> Manage Customer
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageFeedback.html" class="flex items-center p-2 rounded hover:bg-amber-200 feedback-link" data-section="feedback">
+                            <i class="fas fa-comment-alt mr-3"></i> Manage Feedback
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageContent.html" class="flex items-center p-2 rounded hover:bg-amber-200 content-link" data-section="content">
+                            <i class="fas fa-file-alt mr-3"></i> Manage Content
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageReports.html" class="flex items-center p-2 rounded hover:bg-amber-200 report-link" data-section="report">
+                            <i class="fas fa-chart-bar mr-3"></i> Manage Report
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="mt-8 pt-4 border-t border-blue-700">
+                    <a href="/src/Pages/Authentication/Login.html" class="flex items-center p-2 rounded hover:bg-amber-200 logout-link">
+                        <i class="fas fa-sign-out-alt mr-3"></i> Logout
+                    </a>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Mobile sidebar toggle -->
+        <div class="md:hidden fixed top-4 left-4 z-50">
+            <button id="sidebarToggle" class="p-2 rounded-md bg-amber-200 text-white">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile sidebar -->
+        <div id="mobileSidebar" class="fixed inset-0 bg-blue-800 text-white p-4 z-40 transform -translate-x-full transition-transform duration-300 md:hidden">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold">Admin</h1>
+                    <p class="text-sm text-blue-200">admin@gmail.com</p>
+                </div>
+                <button id="closeSidebar" class="p-2">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <nav>
+                <h2 class="text-lg font-semibold mb-2">Dashboard</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="/src/Pages/Admin/dashboard.html" class="flex items-center p-2 rounded hover:bg-amber-200 dashboard-link active-nav" data-section="dashboard">
+                            <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageBooking.html" class="flex items-center p-2 rounded hover:bg-amber-200 booking-link" data-section="booking">
+                            <i class="fas fa-calendar-check mr-3"></i> Manage Booking
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageRooms.html" class="flex items-center p-2 rounded hover:bg-amber-200 rooms-link" data-section="rooms">
+                            <i class="fas fa-bed mr-3"></i> Manage Rooms
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageCustomer.html" class="flex items-center p-2 rounded hover:bg-amber-200 customers-link" data-section="customers">
+                            <i class="fas fa-users mr-3"></i> Manage Customer
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageFeedback.html" class="flex items-center p-2 rounded hover:bg-amber-200 feedback-link" data-section="feedback">
+                            <i class="fas fa-comment-alt mr-3"></i> Manage Feedback
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageContent.html" class="flex items-center p-2 rounded hover:bg-amber-200 content-link" data-section="content">
+                            <i class="fas fa-file-alt mr-3"></i> Manage Content
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/src/Pages/Admin/ManageReports.html" class="flex items-center p-2 rounded hover:bg-amber-200 report-link" data-section="report">
+                            <i class="fas fa-chart-bar mr-3"></i> Manage Report
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="mt-8 pt-4 border-t border-blue-700">
+                    <a href="/src/Pages/Authentication/Login.html" class="flex items-center p-2 rounded hover:bg-amber-200 logout-link">
+                        <i class="fas fa-sign-out-alt mr-3"></i> Logout
+                    </a>
+                </div>
+            </nav>
+        </div>
+        <!-- Main Content -->
+        <div class="flex-1  bg-amber-200 overflow-auto">
+            <section id="customers" class="p-6 ">
+                <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <h1 class="text-2xl font-bold">Manage Customers</h1>
+                    <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+                        <div class="relative w-full md:w-64">
+                            <input type="text" placeholder="Search customers..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </div>
+                        <button id="addCustomerBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            <i class="fas fa-plus mr-2"></i> Add Customer
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="responsive-table">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr class="table-header">
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Customer ID</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Name</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Phone</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Total Bookings</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="customerTableBody">
+                                <!-- Customer rows will be inserted here dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-700" id="resultsInfo">
+                                Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span class="font-medium">25</span> results
+                            </p>
+                        </div>
+                        <nav class="pagination" id="pagination">
+                            <!-- Pagination links will be inserted here dynamically -->
+                        </nav>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Add/Edit Customer Modal -->
+    <div id="customerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 class="text-xl font-bold mb-4" id="modalTitle">Add New Customer</h2>
+            <form id="customerForm">
+                <input type="hidden" id="customerId">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="firstName">First Name</label>
+                        <input type="text" id="firstName" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="lastName">Last Name</label>
+                        <input type="text" id="lastName" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email</label>
+                    <input type="email" id="email" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">Phone</label>
+                    <input type="tel" id="phone" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="status">Status</label>
+                    <select id="status" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="Active">Active</option>
+                        <option value="Blocked">Blocked</option>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" id="cancelCustomer">Cancel</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Save Customer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ========== SIDEBAR FUNCTIONALITY ==========
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const mobileSidebar = document.getElementById('mobileSidebar');
+            const closeSidebar = document.getElementById('closeSidebar');
+            
+            sidebarToggle.addEventListener('click', function() {
+                mobileSidebar.classList.remove('-translate-x-full');
+            });
+            
+            closeSidebar.addEventListener('click', function() {
+                mobileSidebar.classList.add('-translate-x-full');
+            });
+
+            // ========== CUSTOMER DATA MANAGEMENT ==========
+            // Configuration
+            const itemsPerPage = 10;
+            let currentPage = 1;
+            let filteredCustomers = [];
+            
+            // Sample customer data with additional fields
+            let customers = [
+                { id: 'C101', firstName: 'Yogeshwaran', lastName: 'R', email: 'yogesh@email.com', phone: '+1234567890', status: 'Active', bookings: 5, joinDate: '2023-01-15' },
+                { id: 'C102', firstName: 'Gogul', lastName: '', email: 'gogul@email.com', phone: '+1234567890', status: 'Blocked', bookings: 3, joinDate: '2023-02-20' },
+                { id: 'C103', firstName: 'Priya', lastName: '', email: 'priya@email.com', phone: '+9876543210', status: 'Active', bookings: 2, joinDate: '2023-03-10' },
+                { id: 'C104', firstName: 'Rahul', lastName: '', email: 'rahul@email.com', phone: '+1122334455', status: 'Active', bookings: 4, joinDate: '2023-01-25' },
+                { id: 'C105', firstName: 'Anjali', lastName: 'K', email: 'anjali@email.com', phone: '+4455667788', status: 'Active', bookings: 1, joinDate: '2023-04-05' },
+                { id: 'C106', firstName: 'Vikram', lastName: 'S', email: 'vikram@email.com', phone: '+9988776655', status: 'Blocked', bookings: 0, joinDate: '2023-04-12' },
+                { id: 'C107', firstName: 'Neha', lastName: 'P', email: 'neha@email.com', phone: '+1122334455', status: 'Active', bookings: 3, joinDate: '2023-02-18' },
+                { id: 'C108', firstName: 'Sanjay', lastName: 'M', email: 'sanjay@email.com', phone: '+5544332211', status: 'Active', bookings: 2, joinDate: '2023-03-22' },
+                { id: 'C109', firstName: 'Divya', lastName: 'R', email: 'divya@email.com', phone: '+6677889900', status: 'Blocked', bookings: 1, joinDate: '2023-04-01' },
+                { id: 'C110', firstName: 'Arun', lastName: 'K', email: 'arun@email.com', phone: '+3344556677', status: 'Active', bookings: 5, joinDate: '2023-01-10' },
+                { id: 'C111', firstName: 'Shreya', lastName: 'G', email: 'shreya@email.com', phone: '+7788990011', status: 'Active', bookings: 2, joinDate: '2023-03-15' },
+                { id: 'C112', firstName: 'Manoj', lastName: 'B', email: 'manoj@email.com', phone: '+1122334455', status: 'Blocked', bookings: 0, joinDate: '2023-04-08' },
+                { id: 'C113', firstName: 'Kavita', lastName: 'S', email: 'kavita@email.com', phone: '+5566778899', status: 'Active', bookings: 3, joinDate: '2023-02-25' },
+                { id: 'C114', firstName: 'Nitin', lastName: 'P', email: 'nitin@email.com', phone: '+9900112233', status: 'Active', bookings: 4, joinDate: '2023-01-30' },
+                { id: 'C115', firstName: 'Pooja', lastName: 'M', email: 'pooja@email.com', phone: '+4455667788', status: 'Active', bookings: 1, joinDate: '2023-04-10' },
+                { id: 'C116', firstName: 'Ravi', lastName: 'K', email: 'ravi@email.com', phone: '+1122334455', status: 'Blocked', bookings: 0, joinDate: '2023-04-15' },
+                { id: 'C117', firstName: 'Sunita', lastName: 'R', email: 'sunita@email.com', phone: '+6677889900', status: 'Active', bookings: 2, joinDate: '2023-03-05' },
+                { id: 'C118', firstName: 'Deepak', lastName: 'S', email: 'deepak@email.com', phone: '+3344556677', status: 'Active', bookings: 3, joinDate: '2023-02-12' },
+                { id: 'C119', firstName: 'Meera', lastName: 'P', email: 'meera@email.com', phone: '+7788990011', status: 'Blocked', bookings: 1, joinDate: '2023-04-03' },
+                { id: 'C120', firstName: 'Karan', lastName: 'M', email: 'karan@email.com', phone: '+1122334455', status: 'Active', bookings: 4, joinDate: '2023-01-20' }
+            ];
+
+            // ========== TABLE INITIALIZATION ==========
+            const tableBody = document.getElementById('customerTableBody');
+            const searchInput = document.querySelector('input[type="text"]');
+            const searchIcon = document.querySelector('.fa-search');
+            const paginationContainer = document.getElementById('pagination');
+            const resultsInfo = document.getElementById('resultsInfo');
+            const customerModal = document.getElementById('customerModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const customerForm = document.getElementById('customerForm');
+            const closeBtns = document.querySelectorAll('.close-btn, #cancelCustomer');
+            const addCustomerBtn = document.getElementById('addCustomerBtn');
+
+            // Initialize the table
+            function initTable() {
+                filteredCustomers = [...customers];
+                renderTable();
+                renderPagination();
+                updateResultsInfo();
+            }
+
+            // Render table rows
+            function renderTable() {
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                const customersToShow = filteredCustomers.slice(startIndex, endIndex);
+                
+                tableBody.innerHTML = '';
+                
+                customersToShow.forEach(customer => {
+                    const row = document.createElement('tr');
+                    row.setAttribute('data-id', customer.id);
+                    
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">${customer.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${customer.firstName} ${customer.lastName}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${customer.email}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${customer.phone}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full status-${customer.status.toLowerCase()}">
+                                ${customer.status}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">${customer.bookings}</td>
+                        <td class="px-6 py-4 whitespace-nowrap space-x-2">
+                            <button class="text-blue-600 hover:text-blue-900 edit-customer" data-id="${customer.id}">Edit</button>
+                            ${customer.status === 'Active' ? 
+                                `<button class="text-yellow-600 hover:text-yellow-900 block-customer" data-id="${customer.id}">Block</button>` : 
+                                `<button class="text-green-600 hover:text-green-900 unblock-customer" data-id="${customer.id}">Unblock</button>`}
+                            <button class="text-red-600 hover:text-red-900 delete-customer" data-id="${customer.id}">Delete</button>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+                
+                // Add event listeners to the new buttons
+                addEventListeners();
+            }
+
+            // Render pagination
+            function renderPagination() {
+                const totalPages = Math.ceil(filteredCustomers.length / itemsPerPage);
+                
+                if (totalPages <= 1) {
+                    paginationContainer.innerHTML = '';
+                    return;
+                }
+                
+                let paginationHTML = '';
+                
+                // Previous button
+                paginationHTML += `
+                    <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                        <a class="page-link" href="#" data-page="${currentPage - 1}">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                `;
+                
+                // Page numbers
+                const maxVisiblePages = 5;
+                let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+                let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+                
+                // Adjust if we're at the end
+                if (endPage - startPage + 1 < maxVisiblePages) {
+                    startPage = Math.max(1, endPage - maxVisiblePages + 1);
+                }
+                
+                // Always show first page
+                if (startPage > 1) {
+                    paginationHTML += `
+                        <li class="page-item ${1 === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#" data-page="1">1</a>
+                        </li>
+                    `;
+                    if (startPage > 2) {
+                        paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                    }
+                }
+                
+                // Middle pages
+                for (let i = startPage; i <= endPage; i++) {
+                    paginationHTML += `
+                        <li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#" data-page="${i}">${i}</a>
+                        </li>
+                    `;
+                }
+                
+                // Always show last page
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+                        paginationHTML += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                    }
+                    paginationHTML += `
+                        <li class="page-item ${totalPages === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#" data-page="${totalPages}">${totalPages}</a>
+                        </li>
+                    `;
+                }
+                
+                // Next button
+                paginationHTML += `
+                    <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                        <a class="page-link" href="#" data-page="${currentPage + 1}">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                `;
+                
+                paginationContainer.innerHTML = paginationHTML;
+                
+                // Add event listeners to pagination links
+                document.querySelectorAll('.page-link').forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const page = parseInt(this.getAttribute('data-page'));
+                        if (page >= 1 && page <= totalPages) {
+                            currentPage = page;
+                            renderTable();
+                            renderPagination();
+                            updateResultsInfo();
+                        }
+                    });
+                });
+            }
+
+            // Update results info
+            function updateResultsInfo() {
+                const startIndex = (currentPage - 1) * itemsPerPage + 1;
+                const endIndex = Math.min(currentPage * itemsPerPage, filteredCustomers.length);
+                
+                resultsInfo.innerHTML = `
+                    Showing <span class="font-medium">${startIndex}</span> to <span class="font-medium">${endIndex}</span> of <span class="font-medium">${filteredCustomers.length}</span> results
+                `;
+            }
+
+            // Add event listeners to table buttons
+            function addEventListeners() {
+                // Edit button functionality
+                document.querySelectorAll('.edit-customer').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const customerId = this.getAttribute('data-id');
+                        const customer = customers.find(c => c.id === customerId);
+                        
+                        modalTitle.textContent = 'Edit Customer';
+                        document.getElementById('customerId').value = customerId;
+                        document.getElementById('firstName').value = customer.firstName;
+                        document.getElementById('lastName').value = customer.lastName;
+                        document.getElementById('email').value = customer.email;
+                        document.getElementById('phone').value = customer.phone;
+                        document.getElementById('status').value = customer.status;
+                        
+                        customerModal.style.display = 'block';
+                    });
+                });
+                
+                // Block button functionality
+                document.querySelectorAll('.block-customer').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const customerId = this.getAttribute('data-id');
+                        const customer = customers.find(c => c.id === customerId);
+                        const customerName = `${customer.firstName} ${customer.lastName}`.trim();
+                        
+                        if (confirm(`Are you sure you want to block ${customerName}?`)) {
+                            customer.status = 'Blocked';
+                            
+                            // Update the filtered customers if needed
+                            const filteredIndex = filteredCustomers.findIndex(c => c.id === customerId);
+                            if (filteredIndex !== -1) {
+                                filteredCustomers[filteredIndex].status = 'Blocked';
+                            }
+                            
+                            renderTable();
+                            renderPagination();
+                            
+                            alert(`Customer ${customerName} has been blocked successfully!`);
+                        }
+                    });
+                });
+                
+                // Unblock button functionality
+                document.querySelectorAll('.unblock-customer').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const customerId = this.getAttribute('data-id');
+                        const customer = customers.find(c => c.id === customerId);
+                        const customerName = `${customer.firstName} ${customer.lastName}`.trim();
+                        
+                        if (confirm(`Are you sure you want to unblock ${customerName}?`)) {
+                            customer.status = 'Active';
+                            
+                            // Update the filtered customers if needed
+                            const filteredIndex = filteredCustomers.findIndex(c => c.id === customerId);
+                            if (filteredIndex !== -1) {
+                                filteredCustomers[filteredIndex].status = 'Active';
+                            }
+                            
+                            renderTable();
+                            renderPagination();
+                            
+                            alert(`Customer ${customerName} has been unblocked successfully!`);
+                        }
+                    });
+                });
+                
+                // Delete button functionality
+                document.querySelectorAll('.delete-customer').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const customerId = this.getAttribute('data-id');
+                        const customer = customers.find(c => c.id === customerId);
+                        const customerName = `${customer.firstName} ${customer.lastName}`.trim();
+                        
+                        if (confirm(`Are you sure you want to delete ${customerName}? This action cannot be undone.`)) {
+                            // Remove customer from data
+                            customers = customers.filter(c => c.id !== customerId);
+                            filteredCustomers = filteredCustomers.filter(c => c.id !== customerId);
+                            
+                            // If we deleted the last item on the current page, go to previous page
+                            if (filteredCustomers.length <= (currentPage - 1) * itemsPerPage && currentPage > 1) {
+                                currentPage--;
+                            }
+                            
+                            renderTable();
+                            renderPagination();
+                            updateResultsInfo();
+                            
+                            alert(`Customer ${customerName} has been deleted successfully!`);
+                        }
+                    });
+                });
+            }
+
+            // ========== SEARCH FUNCTIONALITY ==========
+            function performSearch() {
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                if (searchTerm === '') {
+                    filteredCustomers = [...customers];
+                } else {
+                    filteredCustomers = customers.filter(customer => {
+                        const fullName = `${customer.firstName} ${customer.lastName}`.toLowerCase();
+                        return (
+                            customer.id.toLowerCase().includes(searchTerm) || 
+                            fullName.includes(searchTerm) || 
+                            customer.email.toLowerCase().includes(searchTerm) || 
+                            customer.phone.toLowerCase().includes(searchTerm) || 
+                            customer.status.toLowerCase().includes(searchTerm)
+                        );
+                    });
+                }
+                
+                currentPage = 1;
+                renderTable();
+                renderPagination();
+                updateResultsInfo();
+            }
+            
+            searchInput.addEventListener('keyup', performSearch);
+            searchIcon.addEventListener('click', performSearch);
+
+            // ========== MODAL FUNCTIONALITY ==========
+            // Add customer button
+            addCustomerBtn.addEventListener('click', function() {
+                modalTitle.textContent = 'Add New Customer';
+                customerForm.reset();
+                document.getElementById('customerId').value = '';
+                customerModal.style.display = 'block';
+            });
+
+            // Form submission
+            customerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const customerId = document.getElementById('customerId').value;
+                const isEdit = customerId !== '';
+                
+                // Collect form data
+                const formData = {
+                    firstName: document.getElementById('firstName').value,
+                    lastName: document.getElementById('lastName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    status: document.getElementById('status').value,
+                    bookings: isEdit ? customers.find(c => c.id === customerId)?.bookings || 0 : 0,
+                    joinDate: isEdit ? customers.find(c => c.id === customerId)?.joinDate || new Date().toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
+                };
+
+                if (isEdit) {
+                    // Update existing customer
+                    const index = customers.findIndex(c => c.id === customerId);
+                    if (index !== -1) {
+                        customers[index] = { ...customers[index], ...formData };
+                    }
+                    
+                    // Update filtered customers if needed
+                    const filteredIndex = filteredCustomers.findIndex(c => c.id === customerId);
+                    if (filteredIndex !== -1) {
+                        filteredCustomers[filteredIndex] = { ...filteredCustomers[filteredIndex], ...formData };
+                    }
+                } else {
+                    // Add new customer
+                    const newId = 'C' + (customers.length + 101);
+                    const newCustomer = { id: newId, ...formData };
+                    customers.push(newCustomer);
+                    filteredCustomers.push(newCustomer);
+                }
+                
+                renderTable();
+                renderPagination();
+                updateResultsInfo();
+                
+                // Show success message
+                alert(`Customer ${isEdit ? 'updated' : 'added'} successfully!`);
+                customerModal.style.display = 'none';
+            });
+
+            // Close modals
+            closeBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    customerModal.style.display = 'none';
+                });
+            });
+            
+            window.addEventListener('click', function(event) {
+                if (event.target === customerModal) {
+                    customerModal.style.display = 'none';
+                }
+            });
+
+            // Initialize the table
+            initTable();
+        });
+    </script>
+</body>
+</html>

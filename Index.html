@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/public/Asset/fevicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/public/Asset/fevicon/favicon.svg" />
+    <link rel="shortcut icon" href="/public/Asset/fevicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/public/Asset/fevicon/apple-touch-icon.png" />
+    <link rel="manifest" href="/public/Asset/fevicon/site.webmanifest" />
+    <title>BookMyHotel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/src/Style/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        secondary: '#1c1c1c',
+                        beige: '#f8f3e7',
+                        primary:'#f8b84e'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+   
+    <header class="bg-secondary sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="#" class="text-header text-2xl font-bold italic">BookMyHotel</a>
+            </div>
+            <nav class="hidden md:flex items-center">
+                <a href="#" class="nav-link">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#offers" class="nav-link">Offers</a>
+                <a href="#gallery" class="nav-link">Gallery</a>
+                <a href="/src/Pages/Contact/Contact.html" class="nav-link">Contact Us</a>
+                <a href="/src/Pages/Authentication/Login.html" class="action-btn ml-4 px-4 py-2">Login</a>
+                <a href="/src/Pages/Authentication/Login.html" class="action-btn ml-2 px-4 py-2">Book a Stay</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden text-white">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        
+        <div id="mobile-menu" class="mobile-menu bg-secondary md:hidden">
+            <div class="container mx-auto px-4 py-2 flex flex-col">
+                <a href="#" class="nav-link py-2 border-b border-gray-700">Home</a>
+                <a href="#about" class="nav-link py-2 border-b border-gray-700">About</a>
+                <a href="#features" class="nav-link py-2 border-b border-gray-700">Features</a>
+                <a href="#offers" class="nav-link py-2 border-b border-gray-700">Offers</a>
+                <a href="#gallery" class="nav-link py-2 border-b border-gray-700">Gallery</a>
+                
+                <a href="/src/Pages/Contact/Contact.html" class="nav-link py-2 border-b border-gray-700">Contact Us</a>
+                <div class="flex mt-4 mb-2">
+                    <a href="/src/Pages/Authentication/Login.html" class="action-btn mr-2 w-1/2 text-center py-2">Login</a>
+                    <a href="/src/Pages/Authentication/Login.html" class="action-btn w-1/2 text-center py-2">Book a Stay</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    
+    <section class="container mx-auto px-4 py-6">
+        <div class="flex flex-col md:flex-row gap-6">
+        
+            <div class="bg-secondary rounded-md p-6 w-full md:w-1/3 h-fit sticky top-24">
+                <h2 class="text-white text-xl mb-4 font-bold">Book Your Stay</h2>
+                <div class="mb-4">
+                    <label class="block text-white text-sm mb-2">Check-in</label>
+                    <input type="date" class="date-input" placeholder="--/--/----">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-white text-sm mb-2">Check-out</label>
+                    <input type="date" class="date-input" placeholder="--/--/----">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-white text-sm mb-2">Guests</label>
+                    <select class="date-input">
+                        <option value="1">1 Guest</option>
+                        <option value="2">2 Guests</option>
+                        <option value="3">3 Guests</option>
+                        <option value="4">4 Guests</option>
+                        <option value="5">5+ Guests</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-white text-sm mb-2">Rooms</label>
+                    <select class="date-input">
+                        <option value="1">1 Room</option>
+                        <option value="2">2 Rooms</option>
+                        <option value="3">3 Rooms</option>
+                        <option value="4">4 Rooms</option>
+                    </select>
+                </div>
+                <div class="flex justify-center mt-6">
+                   <a href="/src/Pages/Authentication/Login.html"> <button class="search-btn px-6 py-2">Search Availability</button></a>
+                </div>
+            </div>
+
+            <div class="relative w-full md:w-2/3 rounded-md overflow-hidden h-96">
+                
+                <div class="hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');">
+                    <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+                    <div class="absolute inset-0 flex flex-col justify-center text-white px-8 md:px-16 hero-content">
+                        <h2 class="text-4xl md:text-5xl font-bold mb-2 hero-title">Seasonal Savings Await</h2>
+                        <p class="text-lg mb-4">Lock in our best packages and deals of the season. Limited time offers with up to 40% off.</p>
+                        <div>
+                            <a href="/src/Pages/Authentication/Login.html"><button class="book-now-btn px-6 py-2">Book Now</button></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1618773928121-c32242e63f39?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');">
+                    <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+                    <div class="absolute inset-0 flex flex-col justify-center text-white px-8 md:px-16 hero-content">
+                        <h2 class="text-4xl md:text-5xl font-bold mb-2 hero-title">Luxury Redefined</h2>
+                        <p class="text-lg mb-4">Experience our newly renovated suites with premium amenities and breathtaking views.</p>
+                        <div>
+                            <button class="book-now-btn px-6 py-2">Explore Rooms</button>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');">
+                    <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+                    <div class="absolute inset-0 flex flex-col justify-center text-white px-8 md:px-16 hero-content">
+                        <h2 class="text-4xl md:text-5xl font-bold mb-2 hero-title">Weekend Getaway</h2>
+                        <p class="text-lg mb-4">Special weekend packages with spa credits and late checkout included.</p>
+                        <div>
+                            <button class="book-now-btn px-6 py-2">View Packages</button>
+                        </div>
+                    </div>
+                </div>
+                
+             
+                <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1136&q=80');">
+                    <div class="absolute inset-0 bg-black bg-opacity-30"></div>
+                    <div class="absolute inset-0 flex flex-col justify-center text-white px-8 md:px-16 hero-content">
+                        <h2 class="text-4xl md:text-5xl font-bold mb-2 hero-title">Business Travel Made Easy</h2>
+                        <p class="text-lg mb-4">Our executive floors feature workspaces, meeting rooms, and premium connectivity.</p>
+                        <div>
+                            <button class="book-now-btn px-6 py-2">Business Offers</button>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
+                    <button id="prev-slide" class="text-white bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-70 transition-all">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                </div>
+                <div class="absolute right-4 top-1/2 transform -translate-y-1/2">
+                    <button id="next-slide" class="text-white bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-70 transition-all">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="absolute bottom-4 left-0 right-0 flex justify-center">
+                    <span class="slider-dot active" data-index="0"></span>
+                    <span class="slider-dot" data-index="1"></span>
+                    <span class="slider-dot" data-index="2"></span>
+                    <span class="slider-dot" data-index="3"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+ 
+    <section id="about" class="bg-secondary py-12">
+        <div class="container mx-auto px-4">
+            <div class="py-5">
+            <h2 class="text-center text-white text-3xl md:text-4xl font-bold italic mb-6">About Us</h2>
+            <div class="flex flex-col md:flex-row gap-8 mt-8">
+                <div class="w-full md:w-1/2 bg-secondary rounded-md p-6 md:p-8">
+                    <h3 class="text-white text-xl md:text-2xl italic mb-4">A Perfect Stay for Every Traveler</h3>
+                    <p class="text-primary mb-4">
+                        Welcome to BookMyHotel, where comfort meets elegance! Our hotel is designed to offer a luxurious, relaxing, and memorable experience for every guest. Whether you're visiting for business, leisure, or a weekend escape, BookMyHotel provides the perfect ambiance and top-tier hospitality.
+                    </p>
+                    <p class="text-white mb-4">
+                        Founded in 2010, we've been serving guests with exceptional service and amenities. Our team is dedicated to making your stay unforgettable with attention to every detail.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <h4 class="text-primary font-bold mb-2">200+ Rooms</h4>
+                            <p class="text-white text-sm">Luxurious accommodations for all needs</p>
+                        </div>
+                        <div>
+                            <h4 class="text-primary font-bold mb-2">24/7 Service</h4>
+                            <p class="text-white text-sm">Always available to meet your needs</p>
+                        </div>
+                        <div>
+                            <h4 class="text-primary font-bold mb-2">5-Star Dining</h4>
+                            <p class="text-white text-sm">Award-winning restaurants on site</p>
+                        </div>
+                        <div>
+                            <h4 class="text-primary font-bold mb-2">Prime Location</h4>
+                            <p class="text-white text-sm">In the heart of the city's best attractions</p>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <button class="read-more-btn px-6 py-2">Read more</button>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 h-96 md:h-auto">
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Hotel Building" class="w-full h-full object-cover rounded-md">
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+   
+    <section id="features" class="py-12 bg-beige">
+        <div class="container mx-auto px-4">
+            <div class="py-5">
+            <h2 class="text-center text-secondary text-3xl md:text-4xl font-bold italic mb-4">Our Features</h2>
+            <p class="text-center text-secondary mb-8 max-w-2xl mx-auto">Discover the exceptional amenities and services that make your stay unforgettable</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                
+                <div class="feature-card p-4">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i class="fas fa-snowflake text-2xl text-secondary"></i>
+                    </div>
+                    <h3 class="text-primary text-center text-xl mb-2">AC Rooms</h3>
+                    <p class="text-sm text-center mb-4">Experience comfort and relaxation in our fully air-conditioned rooms, ensuring a refreshing stay.</p>
+                </div>
+                
+                <div class="feature-card p-4">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i class="fas fa-wifi text-2xl text-secondary"></i>
+                    </div>
+                    <h3 class="text-primary text-center text-xl mb-2">Free WiFi</h3>
+                    <p class="text-sm text-center mb-4">Stay connected seamlessly with our high-speed WiFi available throughout the hotel.</p>
+                </div>
+                
+                <div class="feature-card p-4">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i class="fas fa-tv text-2xl text-secondary"></i>
+                    </div>
+                    <h3 class="text-primary text-center text-xl mb-2">Full HD TV</h3>
+                    <p class="text-sm text-center mb-4">Enjoy entertainment with our FULL HD TV sets with premium channels.</p>
+                </div>
+              
+                <div class="feature-card p-4">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i class="fas fa-hot-tub text-2xl text-secondary"></i>
+                    </div>
+                    <h3 class="text-primary text-center text-xl mb-2">Water Heater</h3>
+                    <p class="text-sm text-center mb-4">Enjoy a comfortable and relaxing bath with our hot water facility available 24/7.</p>
+                </div>
+            </div>
+            </div>
+        </div>
+   
+    </section>
+
+ 
+    <section id="offers" class="py-12 bg-secondary">
+        <div class="container mx-auto px-4">
+            <div class="py-5">
+            <h2 class="text-center text-white text-3xl md:text-4xl font-bold italic mb-4">Special Offers</h2>
+            <p class="text-center text-primary mb-8 max-w-2xl mx-auto">Exclusive deals and packages tailored for your perfect stay</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              
+                <div class="offer-card p-4">
+                    <div class="h-64 bg-cover bg-center rounded-md relative" style="background-image: url('https://images.unsplash.com/photo-1618773928121-c32242e63f39?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');">
+                        <div class="absolute inset-0 bg-black bg-opacity-30 rounded-md flex flex-col justify-center items-center text-white p-4">
+                            <h3 class="text-2xl font-bold mb-2">GET 25% OFF</h3>
+                            <p class="text-sm mb-4 text-center">FIRST TIME BOOKING!</p>
+                            <p class="text-xs mb-4 text-center">Valid for new customers only. Book your first stay and enjoy 25% discount on all room types.</p>
+                            <a href="/src/Pages/Authentication/Login.html"> <button class="book-now-btn px-4 py-2">Book Now</button></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="offer-card p-4">
+                    <div class="h-64 bg-cover bg-center rounded-md relative" style="background-image: url('https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80');">
+                        <div class="absolute inset-0 bg-black bg-opacity-30 rounded-md flex flex-col justify-center items-center text-white p-4">
+                            <h3 class="text-2xl font-bold mb-2">STAY 3+ NIGHTS</h3>
+                            <p class="text-sm mb-4 text-center">& GET BREAKFAST FREE EACH MORNING</p>
+                            <p class="text-xs mb-4 text-center">Extended stay offer includes complimentary breakfast for all guests in the room.</p>
+                            <a href="/src/Pages/Authentication/Login.html"> <button class="book-now-btn px-4 py-2">Book Now</button></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="offer-card p-4">
+                    <div class="h-64 bg-cover bg-center rounded-md relative" style="background-image: url('https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');">
+                        <div class="absolute inset-0 bg-black bg-opacity-30 rounded-md flex flex-col justify-center items-center text-white p-4">
+                            <h3 class="text-2xl font-bold mb-2">UP TO 60% OFF</h3>
+                            <p class="text-sm mb-4 text-center">BUDGET STAYS!</p>
+                            <p class="text-xs mb-4 text-center">Special rates for budget-conscious travelers. Limited rooms available at this price.</p>
+                            <a href="/src/Pages/Authentication/Login.html"> <button class="book-now-btn px-4 py-2">Book Now</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+
+
+    <section id="feedback" class="py-12 bg-beige">
+        <div class="container mx-auto px-4">
+            <h2 class="text-center text-secondary text-3xl md:text-4xl font-bold italic mb-4">Guest Feedback</h2>
+            <p class="text-center text-secondary mb-8 max-w-2xl mx-auto">What our valued guests say about their experience</p>
+            <div class="relative h-96 overflow-hidden rounded-lg">
+                <div class="relative h-full">
+                    <div class="feedback-slide active" style="background-image: url('https://images.unsplash.com/photo-1610641818989-c2051b5e2cfd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-white p-8">
+                            <div class="text-center max-w-2xl">
+                                <p class="text-xl italic mb-6">"This is the best service I have ever used! The room was perfect, breakfast was amazing. The staff went above and beyond to make our anniversary special. I would highly recommend it!"</p>
+                                <div class="flex items-center justify-center">
+                                    <div class="w-12 h-12 rounded-full bg-primary mr-4 overflow-hidden">
+                                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="John" class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <p class="text-primary font-bold">John D.</p>
+                                        <p class="text-sm">Verified Guest</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="feedback-slide" style="background-image: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80');">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-white p-8">
+                            <div class="text-center max-w-2xl">
+                                <p class="text-xl italic mb-6">"The location couldn't be better, right in the center of everything. The rooftop bar has stunning views, and our room was spacious and clean. Will definitely stay here again on our next visit!"</p>
+                                <div class="flex items-center justify-center">
+                                    <div class="w-12 h-12 rounded-full bg-primary mr-4 overflow-hidden">
+                                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah" class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <p class="text-primary font-bold">Sarah M.</p>
+                                        <p class="text-sm">Business Traveler</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feedback-slide" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80');">
+                        <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-white p-8">
+                            <div class="text-center max-w-2xl">
+                                <p class="text-xl italic mb-6">"As a frequent business traveler, I appreciate the efficient service and comfortable workspace in the rooms. The executive lounge is a great place to unwind after meetings. Highly recommended for business stays."</p>
+                                <div class="flex items-center justify-center">
+                                    <div class="w-12 h-12 rounded-full bg-primary mr-4 overflow-hidden">
+                                        <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Michael" class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <p class="text-primary font-bold">Michael T.</p>
+                                        <p class="text-sm">Frequent Guest</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="prev-feedback" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-70 transition-all z-10">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button id="next-feedback" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-70 transition-all z-10">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <div class="absolute bottom-4 left-0 right-0 flex justify-center z-10">
+                    <span class="feedback-dot active cursor-pointer" data-feedback-index="0"></span>
+                    <span class="feedback-dot cursor-pointer" data-feedback-index="1"></span>
+                    <span class="feedback-dot cursor-pointer" data-feedback-index="2"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+    <section id="gallery" class="py-12 bg-secondary">
+        <div class="container mx-auto px-4">
+            <div class="py-5">
+            <h2 class="text-center text-white text-3xl md:text-4xl font-bold italic mb-4">Gallery</h2>
+            <p class="text-center text-primary mb-8 max-w-2xl mx-auto">Explore our beautiful spaces and amenities</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Hotel Room" class="w-full h-40 md:h-56 object-cover rounded-md hover:opacity-90 transition-all">
+                <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Hotel Room" class="w-full h-40 md:h-56 object-cover rounded-md hover:opacity-90 transition-all"> 
+                <img src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Hotel Room" class="w-full h-40 md:h-56 object-cover rounded-md hover:opacity-90 transition-all">
+                <img src="https://images.unsplash.com/photo-1621293954908-907159247fc8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Hotel Room" class="w-full h-40 md:h-56 object-cover rounded-md hover:opacity-90 transition-all">
+                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Hotel Lobby" class="w-full h-40 md:h-56 object-cover rounded-md hover:opacity-90 transition-all">
+                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80"    alt="Hotel Restaurant" class="w-full h-40 md:h-56 object-cover rounded-md hover:opacity-90 transition-all">
+                <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Hotel Room" class="w-full h-40 md:h-56 object-cover rounded-md hover:opacity-90 transition-all">
+                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Hotel Lobby" class="w-full h-40 md:h-56 object-cover rounded-md hover:opacity-90 transition-all">
+            </div>
+            <div class="text-center mt-8">
+                <button class="read-more-btn px-6 py-2">View More Photos</button>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <section class="py-12 border-blue-200">
+        <div class="container mx-auto px-4">
+            <h2 class="text-center text-secondary text-3xl md:text-4xl font-bold italic mb-4">Popular Room Types</h2>
+            <p class="text-center text-secondary mb-8 max-w-2xl mx-auto">Choose from our selection of beautifully appointed rooms and suites</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+               
+                <div class="room-card">
+                    <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Single Room" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-primary text-lg">Single Room</h3>
+                            <span class="text-primary font-bold">5000/night</span>
+                        </div>
+                        <p class="text-sm mb-4">A compact room with a single bed, ideal for solo travelers. Amenities include free Wi-Fi, private bathroom, morning continental breakfast.</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex text-primary">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <a href="/src/Pages/Authentication/Login.html"> <button class="book-now-btn px-4 py-2">Book Now</button></a>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="room-card">
+                    <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Deluxe Room" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-primary text-lg">Deluxe Room</h3>
+                            <span class="text-primary font-bold">7000/night</span>
+                        </div>
+                        <p class="text-sm mb-4">An upgraded room with premium furnishings, higher floor, a king-size bed, and additional amenities like a minibar, coffee maker, and enhanced breakfast options.</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex text-primary">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <a href="/src/Pages/Authentication/Login.html"> <button class="book-now-btn px-4 py-2">Book Now</button></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="room-card">
+                    <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Superior Room" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-primary text-lg">Superior Room</h3>
+                            <span class="text-primary font-bold">7500/night</span>
+                        </div>
+                        <p class="text-sm mb-4">A step above the standard room with luxury decor, extra plush bedding, deluxe furnishings, and enhanced amenities for a large TV, premium toiletries, and a mini-fridge.</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex text-primary">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <a href="/src/Pages/Authentication/Login.html"> <button class="book-now-btn px-4 py-2">Book Now</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+               
+                <div class="room-card">
+                    <img src="https://images.unsplash.com/photo-1606744888344-493238951221?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="Executive Room" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-primary text-lg">Executive Room</h3>
+                            <span class="text-primary font-bold">12000/night</span>
+                        </div>
+                        <p class="text-sm mb-4">Designed for business travelers, offering a work desk, ergonomic chair, high-speed Wi-Fi, large TV, minibar, coffee maker, ironing facilities, ensuring a productive and comfortable stay.</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex text-primary">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <a href="/src/Pages/Authentication/Login.html"> <button class="book-now-btn px-4 py-2">Book Now</button></a>
+                        </div>
+                    </div>
+                </div>
+              
+                <div class="room-card">
+                    <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Junior Suite" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-primary text-lg">Junior Suite</h3>
+                            <span class="text-primary font-bold">15000/night</span>
+                        </div>
+                        <p class="text-sm mb-4">A spacious room with a separate seating area, luxurious bedding, premium toiletries, upgraded amenities, and extra space to create a comfortable and stylish stay from standard rooms.</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex text-primary">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <a href="/src/Pages/Authentication/Login.html"> <button class="book-now-btn px-4 py-2">Book Now</button></a>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="room-card">
+                    <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Suite" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-primary text-lg">Presidential Suite</h3>
+                            <span class="text-primary font-bold">20000/night</span>
+                        </div>
+                        <p class="text-sm mb-4">A luxurious suite with separate living and sleeping areas, high-end furnishings, a minibar, huge TV, and more private perks, making it ideal for premium stays.</p>
+                        <div class="flex justify-between items-center">
+                            <div class="flex text-primary">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <a href="/src/Pages/Authentication/Login.html"> <button class="book-now-btn px-4 py-2">Book Now</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+   
+    <footer id="contact" class="footer-section py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl mb-4 text-primary">BookMyHotel</h3>
+                    <p class="text-sm mb-4">Providing exceptional hospitality since 2010. Our mission is to create memorable experiences for every guest.</p>
+                    <div class="flex space-x-4">
+                        <a href="https://www.facebook.com/" class="text-white hover:text-primary transition-all"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://x.com/?lang=en" class="text-white hover:text-primary transition-all"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/" class="text-white hover:text-primary transition-all"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/home" class="text-white hover:text-primary transition-all"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+               
+                <div>
+                    <h3 class="text-xl mb-4">Helpful Links</h3>
+                    <a href="#" class="footer-link">FAQs</a>
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms & Conditions</a>
+                    <a href="#" class="footer-link">Site Map</a>
+                    <a href="/src/Pages/Contact/feedback.html" class="footer-link">Feedback</a>
+                    <a href="/src/Pages/Contact/Contact.html" class="footer-link">Contact us</a>
+
+                </div>
+                
+                <div>
+                    <h3 class="text-xl mb-4">Contact Us</h3>
+                    <div class="flex items-start mb-3">
+                        <i class="fas fa-map-marker-alt text-primary mt-1 mr-3"></i>
+                        <p class="text-sm">Rs puram , Coimbatore - 641002</p>
+                    </div>
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-phone-alt text-primary mr-3"></i>
+                        <p class="text-sm">+91 9677440158</p>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-envelope text-primary mr-3"></i>
+                        <p class="text-sm">info@bookmyhotel.com</p>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl mb-4">Quick Links</h3>
+                    <a href="Index.html" class="footer-link">Home</a>
+                    <a href="#about" class="footer-link">About</a>
+                    <a href="#offers" class="footer-link">Offers</a>
+                    <a href="#features" class="footer-link">Features</a>
+                    <a href="#gallery" class="footer-link">Gallery</a>
+                   
+                </div>
+            </div>
+        </div>
+    </footer>
+
+   
+    <div class="copyright">
+        <div class="container mx-auto px-4">
+            <p>&copy; 2023 BookMyHotel. All Rights Reserved.</p>
+        </div>
+    </div>
+
+    
+    <div id="scroll-top" class="scroll-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script>
+       
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+
+        // Hero Slider
+        const heroSlides = document.querySelectorAll('.hero-slide');
+        const heroDots = document.querySelectorAll('.slider-dot');
+        const prevSlideBtn = document.getElementById('prev-slide');
+        const nextSlideBtn = document.getElementById('next-slide');
+        let currentSlide = 0;
+
+        function showSlide(index) {
+            heroSlides.forEach(slide => slide.classList.remove('active'));
+            heroDots.forEach(dot => dot.classList.remove('active'));
+            
+            heroSlides[index].classList.add('active');
+            heroDots[index].classList.add('active');
+            currentSlide = index;
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % heroSlides.length;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + heroSlides.length) % heroSlides.length;
+            showSlide(currentSlide);
+        }
+
+        nextSlideBtn.addEventListener('click', nextSlide);
+        prevSlideBtn.addEventListener('click', prevSlide);
+
+        heroDots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                showSlide(parseInt(dot.getAttribute('data-index')));
+            });
+        });
+
+        // Auto slide change every 5 seconds
+        let slideInterval = setInterval(nextSlide, 5000);
+
+        // Pause auto slide on hover
+        const heroSlider = document.querySelector('.relative.w-full.md\\:w-2\\/3');
+        heroSlider.addEventListener('mouseenter', () => {
+            clearInterval(slideInterval);
+        });
+        heroSlider.addEventListener('mouseleave', () => {
+            slideInterval = setInterval(nextSlide, 5000);
+        });
+
+        // Feedback Slider
+        const feedbackSlides = document.querySelectorAll('.feedback-slide');
+        const feedbackDots = document.querySelectorAll('.feedback-dot');
+        const prevFeedbackBtn = document.getElementById('prev-feedback');
+        const nextFeedbackBtn = document.getElementById('next-feedback');
+        let currentFeedback = 0;
+
+        function showFeedback(index) {
+            feedbackSlides.forEach(slide => slide.classList.remove('active'));
+            feedbackDots.forEach(dot => dot.classList.remove('active'));
+            
+            feedbackSlides[index].classList.add('active');
+            feedbackDots[index].classList.add('active');
+            currentFeedback = index;
+        }
+
+        function nextFeedback() {
+            currentFeedback = (currentFeedback + 1) % feedbackSlides.length;
+            showFeedback(currentFeedback);
+        }
+
+        function prevFeedback() {
+            currentFeedback = (currentFeedback - 1 + feedbackSlides.length) % feedbackSlides.length;
+            showFeedback(currentFeedback);
+        }
+
+        nextFeedbackBtn.addEventListener('click', nextFeedback);
+        prevFeedbackBtn.addEventListener('click', prevFeedback);
+
+        feedbackDots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                showFeedback(parseInt(dot.getAttribute('data-feedback-index')));
+            });
+        });
+
+      
+        let feedbackInterval = setInterval(nextFeedback, 7000);
+
+       
+        const scrollTopBtn = document.getElementById('scroll-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('active');
+            } else {
+                scrollTopBtn.classList.remove('active');
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+    
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>
